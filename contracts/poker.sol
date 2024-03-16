@@ -5,11 +5,27 @@ import {inEuint8, euint8, inEuint16, euint16, FHE} from "@fhenixprotocol/contrac
 import "@fhenixprotocol/contracts/access/Permissioned.sol";
 
 contract Poker is Permissioned {
+  // players
   address[] public players;
+  // current stack
+  mapping(address => uint8) public currentStack; 
+  // encrypted cards
   euint8[] public cards;
+  // open cards 
   uint8[] public tableCards;
+  // players still in the game
+  mapping(address => bool) public stillPlaying;
+  // player whose turn it is
+  uint8 public currentPlayer;
+  // current bet
+  uint8 public currentBet;
+  // pot
+  uint8 public pot;
 
-  constructor() {}
+  constructor() {
+    nextPlayer = 0;
+    pot = 0;
+  }
 
   function isPlayer(address player) public view returns (bool) {
     for (uint8 i = 0; i < players.length; i++) {
@@ -35,7 +51,65 @@ contract Poker is Permissioned {
     require(msg.value == 1 ether, "You need to pay 1 ether to join the game");
 
     players.push(msg.sender);
+    currentStack[msg.sender] = msg.value;
+    stillPlaying.push(true);
   }
+
+  function bet (uint8 amount) public payable {
+    require(isPlayer(msg.sender), "You are not in the game");
+    require(amount > 0, "You need to raise more than 0 ether");
+    require(msg.value == amount, "You need to pay the amount you want to raise");
+
+    pot += msg.value;
+  }
+
+  /*function betRound() public return uint8 {
+    uint8 currentBet = 0;
+
+    for (uint8 i = 0; i < players.length; i++) {
+      // check if player is still in the game
+      if (!stillPlaying[i]) continue ;
+
+      // check if player has already bet
+      // check if player has enough money to bet
+      // check if player wants to bet
+      // update player bet
+      // update currentBet
+    }
+
+
+    uint currentBet
+
+    pot += msg.value;
+  }*/
+  
+  /*function mainLoop() public payable { // returns (gamestate?)
+    // main game loop
+    // check if all players have joined
+    require(isPlayer(msg.sender), "You are not in the game");
+    require(players.length > 1, "Not enough players to start the game");
+    require(cards.length == 0, "Game already started");
+
+    // track next player to move
+
+    // track current game phase and allowed actions
+
+    // deal cards
+    deal()
+
+
+    // pre-flop bet round                
+    // reveal flop
+    // bet round
+    // reveal turn
+    // bet round
+    // reveal river
+    // bet round
+    // check for winner
+    // showdon 
+    // distribute pot                
+
+  }*/
 
   function deal() public {
     require(players.length > 1, "Not enough players to start the game");
@@ -83,10 +157,6 @@ contract Poker is Permissioned {
     require(index < players.length, "Player not found");
     require(index < (cards.length - 5) / 2, "Player not assigned cards");
 
-    // böse! nicht decrypten
-    // uint8 card1 = FHE.decrypt(cards[2*index]);
-    // uint8 card2 = FHE.decrypt(cards[2*(index + 1)]);
-
     euint16 ret = FHE.or(
       FHE.asEuint16(cards[2 * index]),
       FHE.shl(FHE.asEuint16(cards[2 * (index + 1)]), FHE.asEuint16(8))
@@ -106,12 +176,6 @@ contract Poker is Permissioned {
       uint8 tmp = FHE.decrypt(cards[tableCardIndex + i]);
       tableCards[tableCardIndex + i] = tmp;
     }
-  }
-
-  function getSensitiveData(
-    Permission calldata perm
-  ) public view onlySender(perm) returns (string memory) {
-    // Logic to return sensitive data
   }
 
   // Add additional functions as necessary...

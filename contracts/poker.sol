@@ -178,6 +178,34 @@ contract Poker is Permissioned {
     }
   }
 
+  // this function implements our poker ruleset
+  // call after all cards are revealed
+  // possible hands:
+  // - high card
+  // - pair
+  // - two pair
+  // - three of a kind
+  // - flush
+  // - four of a kind
+  function determineWinner() public returns (address) {
+    require(cards.length > 0, "No cards have been distributed");
+    require(tableCards.length > 0, "No table cards to reveal");
+
+    // check hands of all players and track highest hand(s)
+    // if multiple players have the same hand, check the highest card
+    // if multiple players have the same hand and highest card, split the pot
+    // if no players have a hand, split the pot
+    for (uint8 i = 0; i < players.length; i++) {
+      // first, decrypt hands of players still in the game
+      // use the mapping here
+      
+    }
+
+
+    // determine winner
+    return players[0];
+  }
+
   // Add additional functions as necessary...
 }
 

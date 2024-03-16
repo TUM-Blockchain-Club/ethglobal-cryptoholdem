@@ -15,6 +15,8 @@ contract Poker is Permissioned {
   uint8[] public tableCards;
   // players still in the game
   mapping(address => bool) public stillPlaying;
+  // current round
+  uint8 public currentRound;
   // player whose turn it is
   address public currentPlayer;
   // current bet
@@ -24,26 +26,9 @@ contract Poker is Permissioned {
 
   constructor() {
     nextPlayer = 0;
+    currentRound = 0;
     currentBet = 0;
     pot = 0;
-  }
-
-  function isPlayer(address player) public view returns (bool) {
-    for (uint8 i = 0; i < players.length; i++) {
-      if (players[i] == player) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  function playerIndex(address player) public view returns (uint8) {
-    for (uint8 i = 0; i < players.length; i++) {
-      if (players[i] == player) {
-        return i;
-      }
-    }
-    return 0xff;
   }
 
   function joinGame() public payable {
@@ -56,7 +41,7 @@ contract Poker is Permissioned {
     stillPlaying[msg.sender] = true;
   }
 
-  function bet (uint64 amount) public {
+  function bet(uint64 amount) public {
     require(isPlayer(msg.sender), "You are not in the game");
     require(stillPlaying[msg.sender], "You are not in the game");
     require(amount <= currentStack[msg.sender], "You don't have enough money to bet");
@@ -65,6 +50,8 @@ contract Poker is Permissioned {
 
     currentStack[msg.sender] -= amount;
     pot += amount;
+    currentBet = amount;
+    currentPlayer = players[(playerIndex(msg.sender) + 1) % players.length];
   }
 
   function fold() public {
@@ -73,6 +60,11 @@ contract Poker is Permissioned {
     require(currentPlayer == msg.sender, "It's not your turn");
 
     stillPlaying[msg.sender] = false;
+    
+    uint8 index = (playerIndex(msg.sender) + 1) % players.length;
+    if (index == 0) { currentBet = 0; } 
+    currentPlayer = players[index];
+    
   }
 
   /*function betRound() public return uint8 {
@@ -218,7 +210,23 @@ contract Poker is Permissioned {
     return players[0];
   }
 
-  // Add additional functions as necessary...
+  function isPlayer(address player) public view returns (bool) {
+    for (uint8 i = 0; i < players.length; i++) {
+      if (players[i] == player) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function playerIndex(address player) public view returns (uint8) {
+    for (uint8 i = 0; i < players.length; i++) {
+      if (players[i] == player) {
+        return i;
+      }
+    }
+    return 0xff;
+  }
 }
 
 library RandomMock {

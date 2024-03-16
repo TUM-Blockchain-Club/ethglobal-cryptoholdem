@@ -24,6 +24,7 @@ contract Poker is Permissioned {
 
   constructor() {
     nextPlayer = 0;
+    currentBet = 0;
     pot = 0;
   }
 
@@ -51,16 +52,27 @@ contract Poker is Permissioned {
     require(msg.value == 1 ether, "You need to pay 1 ether to join the game");
 
     players.push(msg.sender);
-    currentStack[msg.sender] = msg.value;
+    currentStack[msg.sender] = msg.value * 10000;
     stillPlaying[msg.sender] = true;
   }
 
-  function bet (uint8 amount) public payable {
+  function bet (uint64 amount) public {
     require(isPlayer(msg.sender), "You are not in the game");
-    require(amount > 0, "You need to raise more than 0 ether");
-    require(msg.value == amount, "You need to pay the amount you want to raise");
+    require(stillPlaying[msg.sender], "You are not in the game");
+    require(amount <= currentStack[msg.sender], "You don't have enough money to bet");
+    require(currentPlayer == msg.sender, "It's not your turn");
+    require(amount >= currentBet, "You need to bet at least the current bet");
 
-    pot += msg.value;
+    currentStack[msg.sender] -= amount;
+    pot += amount;
+  }
+
+  function fold() public {
+    require(isPlayer(msg.sender), "You are not in the game");
+    require(stillPlaying[msg.sender], "You are not in the game");
+    require(currentPlayer == msg.sender, "It's not your turn");
+
+    stillPlaying[msg.sender] = false;
   }
 
   /*function betRound() public return uint8 {

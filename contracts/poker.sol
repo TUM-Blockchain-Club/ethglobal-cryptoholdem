@@ -7,6 +7,7 @@ import "@fhenixprotocol/contracts/access/Permissioned.sol";
 contract Poker is Permissioned {
   address[] public players;
   euint8[] public cards;
+  uint8[] public tableCards;
 
   constructor() {}
 
@@ -93,6 +94,18 @@ contract Poker is Permissioned {
     return FHE.sealoutput(ret, perm.publicKey);
     // check which cards are assigned
     // return permissioned player cards
+  }
+
+  function revealOnTable(uint8 start, uint8 end) public {
+    require(cards.length > 0, "No cards to reveal");
+    require(start < end, "Invalid range");
+    require(end <= tableCards.length, "Invalid range");
+    
+    uint8 tableCardIndex = players.length * 2;
+    for (uint8 i = start; i < end; i++) {
+        uint8 tmp = FHE.decrypt(cards[tableCardIndex + i])
+        tableCards[tableCardIndex + i] = tmp;
+    }
   }
 
   function getSensitiveData(

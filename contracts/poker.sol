@@ -16,7 +16,7 @@ contract Poker is Permissioned {
   // players still in the game
   mapping(address => bool) public stillPlaying;
   // player whose turn it is
-  uint8 public currentPlayer;
+  address public currentPlayer;
   // current bet
   uint8 public currentBet;
   // pot
@@ -52,7 +52,7 @@ contract Poker is Permissioned {
 
     players.push(msg.sender);
     currentStack[msg.sender] = msg.value;
-    stillPlaying.push(true);
+    stillPlaying[msg.sender] = true;
   }
 
   function bet (uint8 amount) public payable {

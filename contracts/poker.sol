@@ -100,11 +100,11 @@ contract Poker is Permissioned {
     require(cards.length > 0, "No cards to reveal");
     require(start < end, "Invalid range");
     require(end <= tableCards.length, "Invalid range");
-    
+
     uint8 tableCardIndex = players.length * 2;
     for (uint8 i = start; i < end; i++) {
-        uint8 tmp = FHE.decrypt(cards[tableCardIndex + i])
-        tableCards[tableCardIndex + i] = tmp;
+      uint8 tmp = FHE.decrypt(cards[tableCardIndex + i]);
+      tableCards[tableCardIndex + i] = tmp;
     }
   }
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT 
 pragma solidity ^0.8.19;
 
-import { inEuint8, euint8, FHE } from "@fhenixprotocol/contracts/FHE.sol";
+import { inEuint8, euint8, inEuint16, euint16, FHE } from "@fhenixprotocol/contracts/FHE.sol";
 import "@fhenixprotocol/contracts/access/Permissioned.sol";
 
 
@@ -22,6 +22,15 @@ contract Poker is Permissioned {
             }
         }
         return false;
+    }
+
+    function playerIndex(address player) public view returns (uint8) {
+        for (uint8 i = 0; i < players.length; i++) {
+            if (players[i] == player) {
+                return i;
+            }
+        }
+        return 0xff;
     }
     
     function joinGame() public payable{
@@ -57,6 +66,25 @@ contract Poker is Permissioned {
                 break;
         }
     }
+
+    function revealOwnCards(Permission calldata perm) public view onlySender(perm) returns (bytes memory) {
+        require(isPlayer(msg.sender), "You are not in the game");
+        require(cards.length > 0, "No cards to reveal");
+
+        uint8 index = playerIndex(msg.sender);
+        require(index < players.length, "Player not found");
+        require(index < (cards.length - 5) / 2, "Player not assigned cards");
+
+        // böse! nicht decrypten
+        // uint8 card1 = FHE.decrypt(cards[2*index]);
+        // uint8 card2 = FHE.decrypt(cards[2*(index + 1)]);
+        
+        euint16 ret = FHE.or(FHE.asEuint16(cards[2*index]), FHE.shl(FHE.asEuint16(cards[2*(index + 1)]), FHE.asEuint16(8)));
+        return FHE.sealoutput(ret, perm.publicKey);
+        // check which cards are assigned
+        // return permissioned player cards
+    }
+
 
     function getSensitiveData(Permission calldata perm) public view onlySender(perm) returns (string memory) {
     // Logic to return sensitive data

@@ -13,12 +13,27 @@ const Table: React.FC = () => {
     <div className={"flex justify-center bg-primary h-[94vH]"}>
       <div>
         <img src={roundTable} alt="Table" className="w-full roundTable " />
+        <p className={"text-white bg-[#500004] rounded absolute top-[35%] left-[43%] text-4xl pr-2 pl-2 pt-1 pb-1 "}>Total Pot: 200$</p>
 
-        {/*<p className={"text-white bg-cover bg-[url('/CryptoHoldem_assests/Rest/Total pot background.png')] rounded absolute top-[31%] absolute  "}>Total Pot: 200$</p>*/}
+        <p className={"bg-cgrey text-primary rounded absolute top-[31%] left-[15.5%] text-2xl p-1"}>2000$</p>
+        <p className={"bg-cgrey text-primary rounded absolute top-[87%] right-[23%] text-2xl p-1"}>2000$</p>
+        <div className={"flex flex-col absolute right-[32%] top-[65%] w-[8%] gap-3"}>
+          <button
+            className={"text-primary bg-cgrey hover:bg-white rounded text-2xl pr-3 pl-3"}>
+            Fold
+          </button>
+          <button
+            className={"text-primary bg-cgrey hover:bg-white rounded text-2xl pr-3 pl-3"}>
+            Check
+          </button>
+          <button
+            className={"text-primary bg-cgrey hover:bg-white rounded text-2xl pr-3 pl-3"}>
+            Raise
+          </button>
+          <input
+            className={"text-primary bg-cgrey rounded text-2xl pr-3 pl-3 text-center"} />
 
-        <p className={"bg-white text-primary rounded absolute top-[31%] left-[15.5%] text-2xl"}>2000$</p>
-        <p className={"bg-white text-primary rounded absolute top-[87%] right-[23%] text-2xl"}>2000$</p>
-
+        </div>
 
         <img src={playerOne} alt="player 1" className="playerOne" />
         <img src={playerPlaceholder} alt="player 2" className="playerTwo" />

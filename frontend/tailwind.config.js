@@ -11,7 +11,7 @@ module.exports = {
       primary: "#1C0002",
       table_black: "#1F2124",
       lightgray: "rgb(217, 217, 217)",
-      cgrey: "#333333",
+      cgrey: "#B9B9B9",
       white: "#FFFFFF",
     },
   },

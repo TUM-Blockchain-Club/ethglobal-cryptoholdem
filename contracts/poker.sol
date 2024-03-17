@@ -34,7 +34,7 @@ contract Poker is Permissioned {
   function joinGame() public payable {
     require(players.length < 5, "Game is full");
     require(!isPlayer(msg.sender), "You are already in the game");
-    require(msg.value == 1 ether, "You need to pay 1 ether to join the game");
+    require(msg.value == 0.0000001 ether, "You need to pay 1 ether to join the game");
 
     players.push(msg.sender);
     currentStack[msg.sender] = msg.value * 10000;
@@ -369,7 +369,7 @@ library RandomMock {
     return blockHash;
   }
 
-  function getFakeRandomU8() public view returns (euint8) {
+  function getFakeRandomU8() internal view returns (euint8) {
     uint8 blockHash = uint8(getFakeRandom());
     return FHE.asEuint8(blockHash);
   }

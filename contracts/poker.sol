@@ -8,10 +8,10 @@ contract Poker is Permissioned {
   // players
   address[] public players;
   // current stack
-  mapping(address => uint8) public currentStack; 
+  mapping(address => uint256) public currentStack;
   // encrypted cards
   euint8[] public cards;
-  // open cards 
+  // open cards
   uint8[] public tableCards;
   // players still in the game
   mapping(address => bool) public stillPlaying;
@@ -20,10 +20,10 @@ contract Poker is Permissioned {
   // current bet
   uint8 public currentBet;
   // pot
-  uint8 public pot;
+  uint256 public pot;
 
   constructor() {
-    nextPlayer = 0;
+    currentPlayer = 0;
     pot = 0;
   }
 
@@ -52,13 +52,16 @@ contract Poker is Permissioned {
 
     players.push(msg.sender);
     currentStack[msg.sender] = msg.value;
-    stillPlaying.push(true);
+    stillPlaying[msg.sender] = true;
   }
 
-  function bet (uint8 amount) public payable {
+  function bet(uint8 amount) public payable {
     require(isPlayer(msg.sender), "You are not in the game");
     require(amount > 0, "You need to raise more than 0 ether");
-    require(msg.value == amount, "You need to pay the amount you want to raise");
+    require(
+      msg.value == amount,
+      "You need to pay the amount you want to raise"
+    );
 
     pot += msg.value;
   }
@@ -82,7 +85,7 @@ contract Poker is Permissioned {
 
     pot += msg.value;
   }*/
-  
+
   /*function mainLoop() public payable { // returns (gamestate?)
     // main game loop
     // check if all players have joined
@@ -171,7 +174,7 @@ contract Poker is Permissioned {
     require(start < end, "Invalid range");
     require(end <= tableCards.length, "Invalid range");
 
-    uint8 tableCardIndex = players.length * 2;
+    uint256 tableCardIndex = players.length * 2;
     for (uint8 i = start; i < end; i++) {
       uint8 tmp = FHE.decrypt(cards[tableCardIndex + i]);
       tableCards[tableCardIndex + i] = tmp;
@@ -187,7 +190,7 @@ contract Poker is Permissioned {
   // - three of a kind
   // - flush
   // - four of a kind
-  function determineWinner() public returns (address) {
+  function determineWinner() internal returns (address) {
     require(cards.length > 0, "No cards have been distributed");
     require(tableCards.length > 0, "No table cards to reveal");
 
@@ -198,12 +201,134 @@ contract Poker is Permissioned {
     for (uint8 i = 0; i < players.length; i++) {
       // first, decrypt hands of players still in the game
       // use the mapping here
-      
-    }
+      if (!stillPlaying[players[i]]) continue;
+      // change this to mapping
+      tableCards[2 * i] = FHE.decrypt(cards[2 * i]);
+      tableCards[2 * i + 1] = FHE.decrypt(cards[2 * i + 1]);
+    } // now we have all the viewable cards
 
+    // check for highest hand
+    uint8 highestHand = 0;
+    uint8 highestHandCount = 0;
+    uint8[] memory highestHandPlayers = new uint8[](players.length);
+
+    for (uint8 i = 0; i < players.length; i++) {
+      if (!stillPlaying[players[i]]) continue;
+      // check for highest hand
+      // if no player has a hand, split the pot
+      uint8 hand = determineHand(i);
+      if (hand > highestHand) {
+        delete highestHandPlayers;
+        highestHand = hand;
+        highestHandPlayers[highestHandCount] = i;
+        highestHandCount++;
+      }
+      if (hand == highestHand) {
+        highestHandPlayers[highestHandCount] = i;
+        highestHandCount++;
+      }
+    }
 
     // determine winner
     return players[0];
+  }
+
+  // determine hand for a single player
+  function determineHand(uint8 player) internal view returns (uint8) {
+    // high card 0, pair 1, two pair 2, three of a kind 3, flush 4, four of a kind 5
+    // start from highest possible hand and work down
+    // four of a kind
+    uint8 multiple = hasMultipleOfAKind(player);
+    if (multiple == 4) return 5;
+    else if (hasFlush(player)) return 4;
+    else if (multiple == 3) return 3;
+    else if (hasTwoPair(player)) return 2;
+    else if (multiple == 2) return 1;
+    return 0;
+  }
+
+  // check if player has multiple of a kind, return multiplicity
+  function hasMultipleOfAKind(uint8 player) internal view returns (uint8) {
+    uint8[] memory values = new uint8[](13);
+    for (uint8 i = 0; i < 13; i++) values[i] = 0;
+
+    // only check revealed cards
+    uint8[] memory relevantCards = new uint8[](7);
+    relevantCards[0] = tableCards[2 * player];
+    relevantCards[1] = tableCards[2 * player + 1];
+    for (uint8 i = 0; i < 5; i++) {
+      relevantCards[i + 2] = tableCards[2 * players.length + i];
+    }
+
+    for (uint8 i = 0; i < 7; i++) {
+      uint8 value = getValue(relevantCards[i]);
+      values[value]++;
+    }
+
+    // find highest of a kind
+    uint8 highest = 0;
+    for (uint8 i = 0; i < 13; i++) {
+      if (values[i] > highest) highest = values[i];
+    }
+
+    return highest;
+  }
+
+  // check if player has a flush
+  function hasFlush(uint8 player) internal view returns (bool) {
+    uint8[] memory colors = new uint8[](4);
+    for (uint8 i = 0; i < 4; i++) colors[i] = 0;
+
+    uint8[] memory relevantCards = new uint8[](7);
+    relevantCards[0] = tableCards[2 * player];
+    relevantCards[1] = tableCards[2 * player + 1];
+    for (uint8 i = 0; i < 5; i++) {
+      relevantCards[i + 2] = tableCards[2 * players.length + i];
+    }
+
+    for (uint8 i = 0; i < 7; i++) {
+      uint8 color = getColor(relevantCards[i]);
+      colors[color]++;
+    }
+
+    for (uint8 i = 0; i < 4; i++) {
+      if (colors[i] > 3) return true;
+    }
+
+    return false;
+  }
+
+  // check if player has a two-pair
+  function hasTwoPair(uint8 player) internal view returns (bool) {
+    uint8[] memory values = new uint8[](13);
+    for (uint8 i = 0; i < 13; i++) values[i] = 0;
+
+    uint8[] memory relevantCards = new uint8[](7);
+    relevantCards[0] = tableCards[2 * player];
+    relevantCards[1] = tableCards[2 * player + 1];
+    for (uint8 i = 0; i < 5; i++) {
+      relevantCards[i + 2] = tableCards[2 * players.length + i];
+    }
+
+    for (uint8 i = 0; i < 7; i++) {
+      uint8 value = getValue(relevantCards[i]);
+      values[value]++;
+    }
+
+    uint8 pairs = 0;
+    for (uint8 i = 0; i < 13; i++) {
+      if (values[i] > 1) pairs++;
+    }
+
+    return pairs > 1;
+  }
+
+  function getColor(uint8 card) internal pure returns (uint8) {
+    return card & 0x30;
+  }
+
+  function getValue(uint8 card) internal pure returns (uint8) {
+    return card & 0xf;
   }
 
   // Add additional functions as necessary...

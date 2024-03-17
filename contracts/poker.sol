@@ -13,6 +13,7 @@ contract Poker is Permissioned {
   euint8[] public cards;
   // open cards
   uint8[] public tableCards;
+  bool[] public tableCardsRevealed;
   // players still in the game
   mapping(address => bool) public stillPlaying;
   // current round
@@ -34,7 +35,10 @@ contract Poker is Permissioned {
   function joinGame() public payable {
     require(players.length < 5, "Game is full");
     require(!isPlayer(msg.sender), "You are already in the game");
-    require(msg.value == 0.0000001 ether, "You need to pay 1 ether to join the game");
+    require(
+      msg.value == 0.0000001 ether,
+      "You need to pay 1 ether to join the game"
+    );
 
     players.push(msg.sender);
     currentStack[msg.sender] = msg.value * 10000;
@@ -119,6 +123,8 @@ contract Poker is Permissioned {
 
     // create a new deck of cards
     cards = new euint8[](players.length * 2 + 5);
+    tableCards = new uint8[](players.length * 2 + 5);
+    tableCardsRevealed = new bool[](players.length * 2 + 5);
     for (uint8 i = 0; i < cards.length; ) {
       euint8 color = RandomMock.getFakeRandomU8();
       euint8 value = RandomMock.getFakeRandomU8();
@@ -178,6 +184,7 @@ contract Poker is Permissioned {
     for (uint8 i = start; i < end; i++) {
       uint8 tmp = FHE.decrypt(cards[tableCardIndex + i]);
       tableCards[tableCardIndex + i] = tmp;
+      tableCardsRevealed[i] = true;
     }
   }
 
@@ -206,6 +213,8 @@ contract Poker is Permissioned {
       // change this to mapping
       tableCards[2 * i] = FHE.decrypt(cards[2 * i]);
       tableCards[2 * i + 1] = FHE.decrypt(cards[2 * i + 1]);
+      tableCardsRevealed[2 * i] = true;
+      tableCardsRevealed[2 * i + 1] = true;
     } // now we have all the viewable cards
 
     // check for highest hand(s)
@@ -358,6 +367,34 @@ contract Poker is Permissioned {
       }
     }
     return 0xff;
+  }
+
+  function gameState()
+    public
+    view
+    returns (
+      uint256 playerCount,
+      uint256 playerStack,
+      uint8 round,
+      address playerAddress,
+      uint256 playerBet,
+      uint256 cardCount,
+      uint8[] memory cardsOnTable,
+      bool[] memory cardsRevealed,
+      address[] memory playerAddresses
+    )
+  {
+    return (
+      players.length,
+      currentStack[msg.sender],
+      currentRound,
+      currentPlayer,
+      currentBet,
+      tableCards.length,
+      tableCards,
+      tableCardsRevealed,
+      players
+    );
   }
 }
 

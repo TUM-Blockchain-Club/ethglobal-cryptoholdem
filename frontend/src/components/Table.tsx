@@ -211,12 +211,12 @@ const Table: React.FC = () => {
     return provider;
   }
 
-  const bet = async () => {
+  const bet = async (amount: number) => {
     try {
       provider = getProvider();
       const signer = await provider.getSigner();
       const contract = new Contract("0xd386fD42c8C65A345646F4E0683DfF9EcA0c2716", abi, signer);
-      const tx = await contract.bet();
+      const tx = await contract.bet(amount);
       await tx.wait();
       console.log(await tx);
     } catch (err) {
@@ -267,11 +267,11 @@ const Table: React.FC = () => {
             Fold
           </button>
           <button
-            className={"text-primary bg-cgrey hover:bg-white rounded text-2xl pr-3 pl-3"} onClick={bet}>
+            className={"text-primary bg-cgrey hover:bg-white rounded text-2xl pr-3 pl-3"} onClick={() => bet(0)}>
             Check
           </button>
           <button
-            className={"text-primary bg-cgrey hover:bg-white rounded text-2xl pr-3 pl-3"} onClick={bet}>
+            className={"text-primary bg-cgrey hover:bg-white rounded text-2xl pr-3 pl-3"} onClick={async () => await bet(inputField!)}>
             Raise
           </button>
           <input

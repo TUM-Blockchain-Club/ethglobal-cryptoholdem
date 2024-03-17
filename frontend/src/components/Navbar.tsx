@@ -27,15 +27,13 @@ const Navbar: React.FC = () => {
       {account}
     </Button>
   );
-  var provider =  new BrowserProvider(window.ethereum as Eip1193Provider);
+  var provider = new BrowserProvider(window.ethereum as Eip1193Provider);
   // const client = new FhenixClient({provider});
 
   //const provider = new BrowserProvider(window.ethereum);
 
-
   const abi = ["function startGame() public",
-    "function joinGame() public",
-    "function bet() public"];
+    "function joinGame() public payable"];
   //const signer = account;
 
   //const signer = await provider.getSigner();
@@ -59,7 +57,7 @@ const Navbar: React.FC = () => {
 
   //function getFheClient() {
   //  return fheClient.value;
- // }
+  // }
 
 
   const connect = async () => {

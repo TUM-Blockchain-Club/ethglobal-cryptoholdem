@@ -99,7 +99,7 @@ const Table: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const abi = ["function bet() public",
+  const abi = ["function bet(uint256 amount) public",
     "function fold() public",
     "function gameState() external view returns (tuple(uint256 playerCount, uint256 playerStack, uint8 round, address playerAddress, uint256 playerBet, uint256 cardCount, uint8[] memory cardsOnTable, bool[] memory cardsRevealed, address[] memory playerAddresses))"];
 

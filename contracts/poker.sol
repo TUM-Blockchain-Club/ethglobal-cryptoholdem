@@ -221,7 +221,7 @@ contract Poker is Permissioned {
   // - three of a kind
   // - flush
   // - four of a kind
-  function determineWinner() internal returns (address[] memory) {
+  function determineWinners() internal returns (address[] memory) {
     require(cards.length > 0, "No cards have been distributed");
     require(tableCards.length > 0, "No table cards to reveal");
 
@@ -263,9 +263,9 @@ contract Poker is Permissioned {
       winners[i] = players[highestHandPlayers[i]];
     }
 
-    // determine winners and return addresses!
-    return players[0];
+    return winners;
   }
+
 
   function distributePot(address[] winners) internal {
     // distribute pot to winners

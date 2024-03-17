@@ -8,7 +8,7 @@ contract Poker is Permissioned {
   // players
   address[] public players;
   // current stack
-  mapping(address => uint256) public currentStack; 
+  mapping(address => uint256) public currentStack;
   // encrypted cards
   euint8[] public cards;
   // open cards
@@ -44,7 +44,10 @@ contract Poker is Permissioned {
   function bet(uint256 amount) public {
     require(isPlayer(msg.sender), "You are not in the game");
     require(stillPlaying[msg.sender], "You are not in the game");
-    require(amount <= currentStack[msg.sender], "You don't have enough money to bet");
+    require(
+      amount <= currentStack[msg.sender],
+      "You don't have enough money to bet"
+    );
     require(currentPlayer == msg.sender, "It's not your turn");
     require(amount >= currentBet, "You need to bet at least the current bet");
     require(currentRound < 4, "Game is over");
@@ -54,20 +57,20 @@ contract Poker is Permissioned {
     currentBet = amount;
 
     uint8 index = (playerIndex(msg.sender) + 1) % uint8(players.length);
-    if (index == 0) { 
-        currentBet = 0;
-        if (currentRound == 0) {
-            revealOnTable(0, 3);
-        } else if (currentRound == 1) {
-            revealOnTable(3, 4);
-        } else if (currentRound == 2) {
-            revealOnTable(4, 5);
-        } else if (currentRound == 3) {
-            address[] memory tmp = determineWinner();
-            distributePot(tmp);
-        }
-        currentRound++;
-    } 
+    if (index == 0) {
+      currentBet = 0;
+      if (currentRound == 0) {
+        revealOnTable(0, 3);
+      } else if (currentRound == 1) {
+        revealOnTable(3, 4);
+      } else if (currentRound == 2) {
+        revealOnTable(4, 5);
+      } else if (currentRound == 3) {
+        address[] memory tmp = determineWinners();
+        distributePot(tmp);
+      }
+      currentRound++;
+    }
     currentPlayer = players[index];
   }
 
@@ -78,22 +81,22 @@ contract Poker is Permissioned {
     require(currentRound < 4, "Game is over");
 
     stillPlaying[msg.sender] = false;
-    
+
     uint8 index = (playerIndex(msg.sender) + 1) % uint8(players.length);
-    if (index == 0) { 
-        currentBet = 0;
-        if (currentRound == 0) {
-            revealOnTable(0, 3);
-        } else if (currentRound == 1) {
-            revealOnTable(3, 4);
-        } else if (currentRound == 2) {
-            revealOnTable(4, 5);
-        } else if (currentRound == 3) {
-            address[] memory tmp = determineWinner();
-            distributePot(tmp);
-        }
-        currentRound++;
-    } 
+    if (index == 0) {
+      currentBet = 0;
+      if (currentRound == 0) {
+        revealOnTable(0, 3);
+      } else if (currentRound == 1) {
+        revealOnTable(3, 4);
+      } else if (currentRound == 2) {
+        revealOnTable(4, 5);
+      } else if (currentRound == 3) {
+        address[] memory tmp = determineWinners();
+        distributePot(tmp);
+      }
+      currentRound++;
+    }
     currentPlayer = players[index];
   }
 
@@ -267,112 +270,12 @@ contract Poker is Permissioned {
     return winners;
   }
 
-
-  function distributePot(address[] winners) internal {
+  function distributePot(address[] memory winners) internal {
     // distribute pot to winners
     for (uint8 i = 0; i < winners.length; i++) {
       currentStack[winners[i]] += pot / winners.length;
     }
     pot = 0;
-    
-  }
-
-  // determine hand for a single player
-  function determineHand(uint8 player) internal view returns (uint8) {
-    // high card 0, pair 1, two pair 2, three of a kind 3, flush 4, four of a kind 5
-    // start from highest possible hand and work down
-    // four of a kind
-    uint8 multiple = hasMultipleOfAKind(player);
-    if (multiple == 4) return 5;
-    else if (hasFlush(player)) return 4;
-    else if (multiple == 3) return 3;
-    else if (hasTwoPair(player)) return 2;
-    else if (multiple == 2) return 1;
-    return 0;
-  }
-
-  // check if player has multiple of a kind, return multiplicity
-  function hasMultipleOfAKind(uint8 player) internal view returns (uint8) {
-    uint8[] memory values = new uint8[](13);
-    for (uint8 i = 0; i < 13; i++) values[i] = 0;
-
-    // only check revealed cards
-    uint8[] memory relevantCards = new uint8[](7);
-    relevantCards[0] = tableCards[2 * player];
-    relevantCards[1] = tableCards[2 * player + 1];
-    for (uint8 i = 0; i < 5; i++) {
-      relevantCards[i + 2] = tableCards[2 * players.length + i];
-    }
-
-    for (uint8 i = 0; i < 7; i++) {
-      uint8 value = getValue(relevantCards[i]);
-      values[value]++;
-    }
-
-    // find highest of a kind
-    uint8 highest = 0;
-    for (uint8 i = 0; i < 13; i++) {
-      if (values[i] > highest) highest = values[i];
-    }
-
-    return highest;
-  }
-
-  // check if player has a flush
-  function hasFlush(uint8 player) internal view returns (bool) {
-    uint8[] memory colors = new uint8[](4);
-    for (uint8 i = 0; i < 4; i++) colors[i] = 0;
-
-    uint8[] memory relevantCards = new uint8[](7);
-    relevantCards[0] = tableCards[2 * player];
-    relevantCards[1] = tableCards[2 * player + 1];
-    for (uint8 i = 0; i < 5; i++) {
-      relevantCards[i + 2] = tableCards[2 * players.length + i];
-    }
-
-    for (uint8 i = 0; i < 7; i++) {
-      uint8 color = getColor(relevantCards[i]);
-      colors[color]++;
-    }
-
-    for (uint8 i = 0; i < 4; i++) {
-      if (colors[i] > 3) return true;
-    }
-
-    return false;
-  }
-
-  // check if player has a two-pair
-  function hasTwoPair(uint8 player) internal view returns (bool) {
-    uint8[] memory values = new uint8[](13);
-    for (uint8 i = 0; i < 13; i++) values[i] = 0;
-
-    uint8[] memory relevantCards = new uint8[](7);
-    relevantCards[0] = tableCards[2 * player];
-    relevantCards[1] = tableCards[2 * player + 1];
-    for (uint8 i = 0; i < 5; i++) {
-      relevantCards[i + 2] = tableCards[2 * players.length + i];
-    }
-
-    for (uint8 i = 0; i < 7; i++) {
-      uint8 value = getValue(relevantCards[i]);
-      values[value]++;
-    }
-
-    uint8 pairs = 0;
-    for (uint8 i = 0; i < 13; i++) {
-      if (values[i] > 1) pairs++;
-    }
-
-    return pairs > 1;
-  }
-
-  function getColor(uint8 card) internal pure returns (uint8) {
-    return card & 0x30;
-  }
-
-  function getValue(uint8 card) internal pure returns (uint8) {
-    return card & 0xf;
   }
 
   // determine hand for a single player

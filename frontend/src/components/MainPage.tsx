@@ -6,7 +6,7 @@ const MainPage = () => {
   return (
     <div>
       <div className="flex flex-col">
-        <Navbar />
+        {/*<Navbar />*/}
         <Table/>
       </div>
     </div>

@@ -221,6 +221,7 @@ contract Poker is Permissioned {
   // - three of a kind
   // - flush
   // - four of a kind
+  // TODO: implement high card winner
   function determineWinners() internal returns (address[] memory) {
     require(cards.length > 0, "No cards have been distributed");
     require(tableCards.length > 0, "No table cards to reveal");

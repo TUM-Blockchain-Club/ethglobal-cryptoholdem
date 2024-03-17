@@ -4,8 +4,8 @@ import cardBackground from "../CryptoHoldem_assests/Cards new/Card Background.pn
 
 import blueA from "../CryptoHoldem_assests/Cards new/Blue/Card Blue A.png"
 import blueJ from "../CryptoHoldem_assests/Cards new/Blue/Card Blue J.svg"
-import blueK from "../CryptoHoldem_assests/Cards new/Blue/Card Blue Q.svg"
-import blueQ from "../CryptoHoldem_assests/Cards new/Blue/Card Blue 1.svg"
+import blueK from "../CryptoHoldem_assests/Cards new/Blue/Card Blue K.svg"
+import blueQ from "../CryptoHoldem_assests/Cards new/Blue/Card Blue Q.svg"
 import blue2 from "../CryptoHoldem_assests/Cards new/Blue/Card Blue 2.svg"
 import blue3 from "../CryptoHoldem_assests/Cards new/Blue/Card Blue 3.svg"
 import blue4 from "../CryptoHoldem_assests/Cards new/Blue/Card Blue 4.svg"
@@ -18,8 +18,8 @@ import blue10 from "../CryptoHoldem_assests/Cards new/Blue/Card Blue 10.svg"
 
 import pinkA from "../CryptoHoldem_assests/Cards new/Pink/Card Pink A.svg"
 import pinkJ from "../CryptoHoldem_assests/Cards new/Pink/Card Pink J.svg"
-import pinkK from "../CryptoHoldem_assests/Cards new/Pink/Card Pink Q.svg"
-import pinkQ from "../CryptoHoldem_assests/Cards new/Pink/Card Pink 1.svg"
+import pinkK from "../CryptoHoldem_assests/Cards new/Pink/Card Pink K.svg"
+import pinkQ from "../CryptoHoldem_assests/Cards new/Pink/Card Pink Q.svg"
 import pink2 from "../CryptoHoldem_assests/Cards new/Pink/Card Pink 2.svg"
 import pink3 from "../CryptoHoldem_assests/Cards new/Pink/Card Pink 3.svg"
 import pink4 from "../CryptoHoldem_assests/Cards new/Pink/Card Pink 4.svg"
@@ -32,8 +32,8 @@ import pink10 from "../CryptoHoldem_assests/Cards new/Pink/Card Pink 10.svg"
 
 import greenA from "../CryptoHoldem_assests/Cards new/Green/Card Green A.svg"
 import greenJ from "../CryptoHoldem_assests/Cards new/Green/Card Green J.svg"
-import greenK from "../CryptoHoldem_assests/Cards new/Green/Card Green Q.svg"
-import greenQ from "../CryptoHoldem_assests/Cards new/Green/Card Green 1.svg"
+import greenK from "../CryptoHoldem_assests/Cards new/Green/Card Green K.svg"
+import greenQ from "../CryptoHoldem_assests/Cards new/Green/Card Green Q.svg"
 import green2 from "../CryptoHoldem_assests/Cards new/Green/Card Green 2.svg"
 import green3 from "../CryptoHoldem_assests/Cards new/Green/Card Green 3.svg"
 import green4 from "../CryptoHoldem_assests/Cards new/Green/Card Green 4.svg"
@@ -46,8 +46,8 @@ import green10 from "../CryptoHoldem_assests/Cards new/Green/Card Green 10.svg"
 
 import redA from "../CryptoHoldem_assests/Cards new/Red/Card Red A.svg"
 import redJ from "../CryptoHoldem_assests/Cards new/Red/Card Red J.svg"
-import redK from "../CryptoHoldem_assests/Cards new/Red/Card Red Q.svg"
-import redQ from "../CryptoHoldem_assests/Cards new/Red/Card Red 1.svg"
+import redK from "../CryptoHoldem_assests/Cards new/Red/Card Red K.svg"
+import redQ from "../CryptoHoldem_assests/Cards new/Red/Card Red Q.svg"
 import red2 from "../CryptoHoldem_assests/Cards new/Red/Card Red 2.svg"
 import red3 from "../CryptoHoldem_assests/Cards new/Red/Card Red 3.svg"
 import red4 from "../CryptoHoldem_assests/Cards new/Red/Card Red 4.svg"
@@ -76,17 +76,73 @@ const Table: React.FC = () => {
 
   const [inputField, setInputField] = useState<number | undefined>()
 
-  const [ownCardLeft, setOwnCardLeft] = useState()
-  const [ownCardRight, setOwnCardRight] = useState()
-  const [ownCardLeft, setOwnCardLeft] = useState()
-  const [ownCardRight, setOwnCardRight] = useState()
-  const [tableCardOne, setTableCardOne] = useState()
-  const [tableCardTwo, setTableCardTwo] = useState()
-  const [tableCardThree, setTableCardThree] = useState()
-  const [tableCardFour, setTableCardFour] = useState()
-  const [tableCardFive, setTableCardFive] = useState()
+  const [playerCardLeft, setPlayerCardLeft] = useState(cardBackground)
+  const [playerCardRight, setPlayerCardRight] = useState(cardBackground)
+  const [ownCardLeft, setOwnCardLeft] = useState(cardBackground)
+  const [ownCardRight, setOwnCardRight] = useState(cardBackground)
+  const [tableCardOne, setTableCardOne] = useState(cardBackground)
+  const [tableCardTwo, setTableCardTwo] = useState(cardBackground)
+  const [tableCardThree, setTableCardThree] = useState(cardBackground)
+  const [tableCardFour, setTableCardFour] = useState(cardBackground)
+  const [tableCardFive, setTableCardFive] = useState(cardBackground)
 
   const [api] = notification.useNotification();
+
+  const cards= {
+    "[0,2]":blue2,
+    "[0,3]":blue3,
+    "[0,4]":blue4,
+    "[0,5]":blue5,
+    "[0,6]":blue6,
+    "[0,7]":blue7,
+    "[0,8]":blue8,
+    "[0,9]":blue9,
+    "[0,10]":blue10,
+    "[0,11]":blueJ,
+    "[0,12]":blueQ,
+    "[0,13]":blueK,
+    "[0,14]":blueA,
+    "[1,2]":red2,
+    "[1,3]":red3,
+    "[1,4]":red4,
+    "[1,5]":red5,
+    "[1,6]":red6,
+    "[1,7]":red7,
+    "[1,8]":red8,
+    "[1,9]":red9,
+    "[1,10]":red10,
+    "[1,11]":redJ,
+    "[1,12]":redQ,
+    "[1,13]":redK,
+    "[1,14]":redA,
+    "[2,2]":pink2,
+    "[2,3]":pink3,
+    "[2,4]":pink4,
+    "[2,5]":pink5,
+    "[2,6]":pink6,
+    "[2,7]":pink7,
+    "[2,8]":pink8,
+    "[2,9]":pink9,
+    "[2,10]":pink10,
+    "[2,11]":pinkJ,
+    "[2,12]":pinkQ,
+    "[2,13]":pinkK,
+    "[2,14]":pinkA,
+    "[3,2]":green2,
+    "[3,3]":green3,
+    "[3,4]":green4,
+    "[3,5]":green5,
+    "[3,6]":green6,
+    "[3,7]":green7,
+    "[3,8]":green8,
+    "[3,9]":green9,
+    "[3,10]":green10,
+    "[3,11]":greenJ,
+    "[3,12]":greenQ,
+    "[3,13]":greenK,
+    "[3,14]":greenA,
+
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -97,7 +153,8 @@ const Table: React.FC = () => {
   }, []);
 
   function getCardFromBit(card: number) {
-    return [card >> 4 , (card & 0xf) + 2];
+    let x = "[" + (card >> 4).toString() + "," + (card & 0xf + 2).toString() + "]";
+    return cards[x];
   }
 
   function getCard(cardsOnTable: Uint8Array, cardsRevealed: boolean[], playerAdress: string, player_Addresses: string[]){
@@ -108,11 +165,26 @@ const Table: React.FC = () => {
             player_index = i
           }
       if (cardsRevealed[i]) {
-          if(i ==0 && i == player_index){
-           setOwnCardLeft(getCardFromBit(cardsOnTable[i]))
-           setOwnCardRight(getCardFromBit(cardsOnTable[i]))
-           set(getCardFromBit(cardsOnTable[i]))
-           setOwnCardLeft(getCardFromBit(cardsOnTable[i]))
+          if(i ==0 && i == player_index) {
+            setOwnCardLeft(getCardFromBit(cardsOnTable[0]))
+            setOwnCardRight(getCardFromBit(cardsOnTable[1]))
+            setPlayerCardLeft(getCardFromBit(cardsOnTable[2]))
+            setPlayerCardRight(getCardFromBit(cardsOnTable[3]))
+          }else if (i == 1 && i == player_index){
+            setOwnCardLeft(getCardFromBit(cardsOnTable[1]))
+            setOwnCardRight(getCardFromBit(cardsOnTable[2]))
+            setPlayerCardLeft(getCardFromBit(cardsOnTable[3]))
+            setPlayerCardRight(getCardFromBit(cardsOnTable[0]))
+          }else if (i == 2 && i == player_index){
+            setOwnCardLeft(getCardFromBit(cardsOnTable[2]))
+            setOwnCardRight(getCardFromBit(cardsOnTable[3]))
+            setPlayerCardLeft(getCardFromBit(cardsOnTable[0]))
+            setPlayerCardRight(getCardFromBit(cardsOnTable[1]))
+          }else if (i == 3 && i == player_index){
+            setOwnCardLeft(getCardFromBit(cardsOnTable[3]))
+            setOwnCardRight(getCardFromBit(cardsOnTable[0]))
+            setPlayerCardLeft(getCardFromBit(cardsOnTable[1]))
+            setPlayerCardRight(getCardFromBit(cardsOnTable[2]))
           }else if (i == 4){
             setTableCardOne(getCardFromBit(cardsOnTable[i]))
           }else if (i == 5){
@@ -226,8 +298,8 @@ const Table: React.FC = () => {
 
         <img src={ownCardLeft} alt="ownCard 1" className="ownCardLeft " />
         <img src={ownCardRight} alt="ownCard 2" className="ownCardRight" />
-        <img src={playerCardLeft} alt="ownCard 1" className="ownCardLeft" />
-        <img src={playerCardRight} alt="ownCard 2" className="ownCardRight" />
+        <img src={playerCardLeft} alt="ownCard 1" className="playerCardLeft" />
+        <img src={playerCardRight} alt="ownCard 2" className="playerCardRight" />
       </div>
     </div>
   )

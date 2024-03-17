@@ -75,6 +75,19 @@
   top: 20%;
 }
 
+.playerCardLeft{
+  position: absolute;
+  width: 4%;
+  left: 23%;
+  top: 27%;
+}
+.playerCardRight{
+  position: absolute;
+  width: 4%;
+  left: 27.5%;
+  top: 27%;
+}
+
 .ownCardLeft{
   position: absolute;
   width: 10%;

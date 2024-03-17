@@ -370,7 +370,7 @@ contract Poker is Permissioned {
   }
 
   function gameState()
-    public
+    external
     view
     returns (
       uint256 playerCount,

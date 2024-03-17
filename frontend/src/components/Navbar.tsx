@@ -33,7 +33,7 @@ const Navbar: React.FC = () => {
   //const provider = new BrowserProvider(window.ethereum);
 
 
-  const abi = ["function startGame() public", "function joinGame() public", "function bet() public"]
+  const abi = ["function startGame() public", "function joinGame() public", "function bet() public"];
   //const signer = account;
 
   //const signer = await provider.getSigner();
@@ -76,7 +76,7 @@ const Navbar: React.FC = () => {
     try {
       provider = getProvider();
       const signer = await provider.getSigner();
-      const contract = new Contract("0x82FBF91aE0093Eeac15D7941cD2a2Db6B4bbbAd2", abi, signer);
+      const contract = new Contract("0xd386fD42c8C65A345646F4E0683DfF9EcA0c2716", abi, signer);
       const tx = await contract.startGame();
       await tx.wait();
       console.log(tx);
@@ -90,21 +90,7 @@ const Navbar: React.FC = () => {
     try {
       provider = getProvider();
       const signer = await provider.getSigner();
-      const contract = new Contract("0x82FBF91aE0093Eeac15D7941cD2a2Db6B4bbbAd2", abi, signer);
-      const tx = await contract.joinGame();
-      await tx.wait();
-      console.log(tx);
-    } catch (err) {
-      console.warn("failed to join game..", err);
-      openNotification();
-    }
-  }
-
-  const bet = async () => {
-    try {
-      provider = getProvider();
-      const signer = await provider.getSigner();
-      const contract = new Contract("0x82FBF91aE0093Eeac15D7941cD2a2Db6B4bbbAd2", abi, signer);
+      const contract = new Contract("0xd386fD42c8C65A345646F4E0683DfF9EcA0c2716", abi, signer);
       const tx = await contract.joinGame();
       await tx.wait();
       console.log(tx);

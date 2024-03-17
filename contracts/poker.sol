@@ -8,7 +8,7 @@ contract Poker is Permissioned {
   // players
   address[] public players;
   // current stack
-  mapping(address => uint256) public currentStack;
+  mapping(address => uint256) public currentStack; 
   // encrypted cards
   euint8[] public cards;
   // open cards
@@ -20,7 +20,7 @@ contract Poker is Permissioned {
   // player whose turn it is
   address public currentPlayer;
   // current bet
-  uint8 public currentBet;
+  uint256 public currentBet;
   // pot
   uint256 public pot;
 
@@ -41,30 +41,60 @@ contract Poker is Permissioned {
     stillPlaying[msg.sender] = true;
   }
 
-  function bet(uint64 amount) public {
+  function bet(uint256 amount) public {
     require(isPlayer(msg.sender), "You are not in the game");
     require(stillPlaying[msg.sender], "You are not in the game");
     require(amount <= currentStack[msg.sender], "You don't have enough money to bet");
     require(currentPlayer == msg.sender, "It's not your turn");
     require(amount >= currentBet, "You need to bet at least the current bet");
+    require(currentRound < 5, "Game is over");
 
     currentStack[msg.sender] -= amount;
     pot += amount;
     currentBet = amount;
-    currentPlayer = players[(playerIndex(msg.sender) + 1) % players.length];
+
+    uint8 index = (playerIndex(msg.sender) + 1) % players.length;
+    if (index == 0) { 
+        currentBet = 0;
+        if (currentRound == 0) {
+            revealOnTable(0, 3);
+        } else if (currentRound == 1) {
+            revealOnTable(3, 4);
+        } else if (currentRound == 2) {
+            revealOnTable(4, 5);
+        } else if (currentRound == 3) {
+            determineWinner();
+            // distributePot();
+        }
+        currentRound++;
+    } 
+    currentPlayer = players[index];
   }
 
   function fold() public {
     require(isPlayer(msg.sender), "You are not in the game");
     require(stillPlaying[msg.sender], "You are not in the game");
     require(currentPlayer == msg.sender, "It's not your turn");
+    require(currentRound < 4, "Game is over");
 
     stillPlaying[msg.sender] = false;
     
     uint8 index = (playerIndex(msg.sender) + 1) % players.length;
-    if (index == 0) { currentBet = 0; } 
+    if (index == 0) { 
+        currentBet = 0;
+        if (currentRound == 0) {
+            revealOnTable(0, 3);
+        } else if (currentRound == 1) {
+            revealOnTable(3, 4);
+        } else if (currentRound == 2) {
+            revealOnTable(4, 5);
+        } else if (currentRound == 3) {
+            determineWinner();
+            // distributePot();
+        }
+        currentRound++;
+    } 
     currentPlayer = players[index];
-    
   }
 
   /*function betRound() public return uint8 {
@@ -170,7 +200,7 @@ contract Poker is Permissioned {
     // return permissioned player cards
   }
 
-  function revealOnTable(uint8 start, uint8 end) public {
+  function revealOnTable(uint8 start, uint8 end) private {
     require(cards.length > 0, "No cards to reveal");
     require(start < end, "Invalid range");
     require(end <= tableCards.length, "Invalid range");

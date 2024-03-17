@@ -1,15 +1,17 @@
 import React, {useState} from "react"
-import cardBackground from "../CryptoHoldem_assests/Cards new/Card Background.svg"
+import cardBackground from "../CryptoHoldem_assests/Cards new/Card Background.png"
 import playerOne from "../CryptoHoldem_assests/Player/head-cat.png"
-import playerPlaceholder from "../CryptoHoldem_assests/Player/Placeholder Player/Correct placeholder.png"
+import playerPlaceholder from "../CryptoHoldem_assests/Player/Placeholder Player/Placeholder Player 3.svg"
 import roundTable from "../CryptoHoldem_assests/Rest/Pixel Table.png"
 const Table: React.FC = () => {
 
 
   return (
-    <div className={"flex justify-center bg-primary h-screen"}>
-      <div>
-        <img src={roundTable} alt="Table" className="w-full roundTable" />
+    <div className={"flex justify-center bg-primary h-[94vH]"}>
+      <div >
+        <img src={roundTable} alt="Table" className="w-full roundTable " />
+
+        <p className={"bg-white"}></p>
 
         <img src={playerOne} alt="player 1" className="playerOne" />
         <img src={playerPlaceholder} alt="player 2" className="playerTwo" />

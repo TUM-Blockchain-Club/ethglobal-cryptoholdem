@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav>
-      <div className="flex items-center p-4 h-16 bg-table_black">
+      <div className="flex items-center h-[6vH] bg-table_black">
         <Button type={"primary"} className="text-table_black bg-white">
           {account}
         </Button>

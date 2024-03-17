@@ -38,76 +38,77 @@
 }
 
 .roundTable{
-  height: 40rem;
-  margin-top: 5rem;
+  width: 70%;
+  margin: auto;
+  margin-top: 4.5%;
 }
 
 .playerOne{
   position: absolute;
-  width: 7rem;
-  left: 18rem;
-  top: 12rem;
+  width: 5%;
+  left: 15%;
+  top: 20%;
 }
 .playerTwo{
   position: absolute;
-  width: 8rem;
-  left: 45rem;
-  top: 5rem;
+  width: 5%;
+  left: 37.5%;
+  top: 10%;
 }
 .playerThree{
   position: absolute;
-  width: 8rem;
-  left: 65rem;
-  top: 5rem;
+  width: 5%;
+  right: 37.5%;
+  top: 10%;
 }
 .playerFour{
   position: absolute;
-  width: 8rem;
-  left: 94rem;
-  top: 12rem;
+  width: 5%;
+  right: 15%;
+  top: 20%;
 }
 
 .ownCardLeft{
   position: absolute;
-  width: 12rem;
-  left: 27rem;
-  bottom: 3rem;
+  width: 10%;
+  left: 20%;
+  bottom: 5%;
 }
 
 .ownCardRight{
   position: absolute;
-  width: 12rem;
-  left: 40rem;
-  bottom: 3rem;
+  width: 10%;
+  left: 31%;
+  bottom: 5%;
 }
 
 .tableCardOne{
   position: absolute;
-  width: 6rem;
-  left: 43rem;
-  bottom: 24rem;
+  width: 5%;
+  left: 36.5%;
+  top: 45.5%;
 }
 .tableCardTwo{
   position: absolute;
-  width: 6rem;
-  left: 49.5rem;
-  bottom: 24rem;
+  width: 5%;
+  left: 42%;
+  top: 45.5%;
 }
 .tableCardThree{
   position: absolute;
-  width: 6rem;
-  left: 56rem;
-  bottom: 24rem;
+  width: 5%;
+  left: 47.5%;
+  top: 45.5%;
 }
 .tableCardFour{
   position: absolute;
-  width: 6rem;
-  left: 62.5rem;
-  bottom: 24rem;
+  width: 5%;
+  left: 53%;
+  top: 45.5%;
 }
 .tableCardFive{
   position: absolute;
-  width: 6rem;
-  left: 69rem;
-  bottom: 24rem;
+  width: 5%;
+  left: 58.5%;
+  top: 45.5%;
 }

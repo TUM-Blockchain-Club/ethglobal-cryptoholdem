@@ -1,62 +1,24 @@
-# Fhenix Hardhat Example [![Open in Gitpod][gitpod-badge]][gitpod]
+# Crypto Hold'Em: On-chain Poker
 
-[gitpod]: https://gitpod.io/#https://github.com/fhenixprotocol/fhenix-hardhat-example
-[gitpod-badge]: https://img.shields.io/badge/Gitpod-Open%20in%20Gitpod-FFB45B?logo=gitpod
+This repository contains a project that implements on-chain poker enabled by FHE on Fhenix.
 
-This repository contains a sample project that you can use as the starting point
-for your Fhenix project. It's also a great fit for learning the basics of
-Fhenix smart contract development.
+Cryptohold'em builds on Fhenix for the smart contract functionality, Nouns DAO for icons/design, and React; the entire game logic is implemented in the Poker.sol smart contract. For demo purposes, the poker hands are simplified a bit but can easily be extended at a later point. Connecting the frontend to the smart contract functions is done via Metamask. The FHE aspect is used to encrypt the set of in-play cards while they should be hidden. Any player can view their cards plus any revealed tabletop cards while the game is running; after the showdown all (still participating) hands can be viewed by everyone.
 
-This project is intended to be used with the
-[Fhenix Hardhat Beginners Tutorial](TODO), but you should be
-able to follow it by yourself by reading the README and exploring its
-`contracts`, `tests`, `deploy` and `tasks` directories.
+- Why use FHE: FHE enables us to keep the entire game state on-chain without revealing face-down cards to players before they are supposed to be known. Players can only view their own and flipped cards while the game is going on. After the showdown, the remaining cards of active players are revealed to everyone.
 
-It comes with two fhenix-specific hardhat plugins:
+- Workflow: Users open the CryptoHold’em Website and connect their wallet to the game by clicking the button in the pop-up window. After logging into MetaMask and successfully connecting the wallet, the player joins the contract and is put into a game. When pressing start, the poker session starts, and no one can join the game anymore. When it’s the player's turn, there are three play options: Fold, Check and Raise. If the player decides to raise, the player needs to type in the specific amount to raise. By folding, the player awaits the end of the round, and by checking, the game goes on as usual until a winner is determined.
 
-- `fhenix-hardhat-plugin`: The main plugin for fhenix development in hardhat. It injects `fhenixjs` into the hardhat runtime environment, which allows you to interact with encrypted data in your tests and tasks.
-- `fhenix-hardhat-docker`: A plugin that allows you to run a local Fhenix testnet in a docker container. This is useful for testing your contracts in a sandbox before deploying them on a testnet or on mainnet.
+- For demo purposes, the possible hands are reduced to
+    - high card
+    - pair
+    - two pair
+    - three-of-a-kind
+    - four-of-a-kind
+    - flush, with the usual ranking among them
 
-## Quick start
-
-The first things you need to do are cloning this repository and installing its dependencies:
-
-```sh
-git clone https://github.com/FhenixProtocol/fhenix-hardhat-example.git
-cd fhenix-hardhat-example
-pnpm install
-```
-
-Once installed, let's run a LocalFhenix instance:
-
-```sh
-pnpm localfhenix:start
-```
-
-This will start a LocalFhenix instance in a docker container. If this worked you should see a `Started LocalFhenix successfully` message in your console.
-
-If not, please make sure you have `docker` installed and running on your machine. You can find instructions on how to install docker [here](https://docs.docker.com/get-docker/).
-
-Now that we have a LocalFhenix instance running, we can deploy our contracts to it:
-
-```sh
-npx hardhat deploy
-```
-
-Note that this template defaults to use the `localfhenix` network, which is injected into the hardhat configuration.
-
-Finally, we can run the tasks with:
-
-```sh
-pnpm task:getCount # => 0
-pnpm task:addCount
-pnpm task:getCount # => 1
-pnpm task:addCount --amount 5
-pnpm task:getCount # => 6
-```
-
-TODO: frontend
-
-## More Info
-
-To learn more about the Fhenix Hardhat plugin, check out the [Fhenix Hardhat Plugin Repository](https://github.com/FhenixProtocol/fhenix-hardhat-plugin).
+- Setup:
+    - generate a wallet mnemonic and save it to the .env file
+    - install npm dependencies for both the hardhat and frontend environment
+    - compile and deploy the contract using the provided npm tasks
+    - serve the react frontend after updating the contract addresses
+    - open the website, connect Metamask (with imported wallet) and enjoy the game

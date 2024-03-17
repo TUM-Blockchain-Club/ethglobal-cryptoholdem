@@ -67,6 +67,7 @@ import { Contract, Eip1193Provider, ethers } from 'ethers';
 
 import { BrowserProvider } from "ethers";
 import { use } from "chai";
+import { TupleType } from "typescript"
 
 const Table: React.FC = () => {
   const [ownBudget, setOwnBudget] = useState<string>("0.00");
@@ -95,13 +96,11 @@ const Table: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-
-
-  function getCardFromBit(card: uint8){
-
+  function getCardFromBit(card: number) {
+    return [card >> 4 , (card & 0xf) + 2];
   }
 
-  function getCard(cardsOnTable: uint8[], cardsRevealed: bool[], playerAdress: address, player_Addresses: address[]){
+  function getCard(cardsOnTable: Uint8Array, cardsRevealed: boolean[], playerAdress: string, player_Addresses: string[]){
     for (let i = 0; i < cardsRevealed.length; i++){
       let player_index = 0
       for (i = 0; i< player_Addresses.length; i++)
@@ -130,7 +129,6 @@ const Table: React.FC = () => {
 
   }
 
-  const abi = ["function bet() public",
   const abi = ["function bet(uint256 amount) public",
     "function fold() public",
     "function gameState() external view returns (tuple(uint256 playerCount, uint256 playerStack, uint8 round, address playerAddress, uint256 playerBet, uint256 cardCount, uint8[] memory cardsOnTable, bool[] memory cardsRevealed, address[] memory playerAddresses))"];

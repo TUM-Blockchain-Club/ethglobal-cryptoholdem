@@ -33,7 +33,9 @@ const Navbar: React.FC = () => {
   //const provider = new BrowserProvider(window.ethereum);
 
 
-  const abi = ["function startGame() public", "function joinGame() public", "function bet() public"];
+  const abi = ["function startGame() public",
+    "function joinGame() public",
+    "function bet() public"];
   //const signer = account;
 
   //const signer = await provider.getSigner();

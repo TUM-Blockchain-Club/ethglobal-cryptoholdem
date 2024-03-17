@@ -94,12 +94,14 @@ const Table: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       getState();
-    }, 500);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
-  const abi = ["function bet() public", "function fold() public", "function getState() public view"];
+  const abi = ["function bet() public",
+    "function fold() public",
+    "function gameState() external view returns (tuple(uint256 playerCount, uint256 playerStack, uint8 round, address playerAddress, uint256 playerBet, uint256 cardCount, uint8[] memory cardsOnTable, bool[] memory cardsRevealed, address[] memory playerAddresses))"];
 
   var provider =  new BrowserProvider(window.ethereum as Eip1193Provider);
 
@@ -119,7 +121,7 @@ const Table: React.FC = () => {
       const contract = new Contract("0xd386fD42c8C65A345646F4E0683DfF9EcA0c2716", abi, signer);
       const tx = await contract.bet();
       await tx.wait();
-      console.log(tx);
+      console.log(await tx);
     } catch (err) {
       console.warn("failed to bet..", err);
       //openNotification();
@@ -131,8 +133,8 @@ const Table: React.FC = () => {
       provider = getProvider();
       const signer = await provider.getSigner();
       const contract = new Contract("0xd386fD42c8C65A345646F4E0683DfF9EcA0c2716", abi, signer);
-      const tx = await contract.getState();
-      await tx.wait();
+      const tx = await contract.gameState();
+      // await tx.wait();
       console.log(tx);
     } catch (err) {
       console.warn("failed to get state...", err);

@@ -275,7 +275,7 @@ const Table: React.FC = () => {
             Raise
           </button>
           <input
-            className={"text-primary bg-cgrey rounded text-2xl pr-3 pl-3 text-center"} />
+            className={"text-primary bg-cgrey rounded text-2xl pr-3 pl-3 text-center"} onChange={(event) => setInputField(event.target.value)} />
 
         </div>
 

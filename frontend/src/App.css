@@ -43,6 +43,13 @@
   margin-top: 4.5%;
 }
 
+.mainPlayer{
+  position: absolute;
+  width: 10%;
+  right: 20%;
+  top: 64.5%;
+}
+
 .playerOne{
   position: absolute;
   width: 5%;
@@ -72,14 +79,14 @@
   position: absolute;
   width: 10%;
   left: 20%;
-  bottom: 5%;
+  top: 64.5%;
 }
 
 .ownCardRight{
   position: absolute;
   width: 10%;
   left: 31%;
-  bottom: 5%;
+  top: 64.5%;
 }
 
 .tableCardOne{

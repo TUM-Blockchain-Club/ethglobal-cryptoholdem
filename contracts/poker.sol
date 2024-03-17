@@ -230,7 +230,7 @@ contract Poker is Permissioned {
       }
     }
 
-    // determine winner
+    // determine winners and return addresses!
     return players[0];
   }
 

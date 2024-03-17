@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import cardBackground from "../CryptoHoldem_assests/Cards new/Card Background.png"
 
+
 import blueA from "../CryptoHoldem_assests/Cards new/Blue/Card Blue A.png"
 import blueJ from "../CryptoHoldem_assests/Cards new/Blue/Card Blue J.svg"
 import blueK from "../CryptoHoldem_assests/Cards new/Blue/Card Blue Q.svg"
@@ -76,6 +77,8 @@ const Table: React.FC = () => {
 
   const [ownCardLeft, setOwnCardLeft] = useState()
   const [ownCardRight, setOwnCardRight] = useState()
+  const [ownCardLeft, setOwnCardLeft] = useState()
+  const [ownCardRight, setOwnCardRight] = useState()
   const [tableCardOne, setTableCardOne] = useState()
   const [tableCardTwo, setTableCardTwo] = useState()
   const [tableCardThree, setTableCardThree] = useState()
@@ -92,6 +95,42 @@ const Table: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+
+
+  function getCardFromBit(card: uint8){
+
+  }
+
+  function getCard(cardsOnTable: uint8[], cardsRevealed: bool[], playerAdress: address, player_Addresses: address[]){
+    for (let i = 0; i < cardsRevealed.length; i++){
+      let player_index = 0
+      for (i = 0; i< player_Addresses.length; i++)
+          if (player_Addresses[i] == playerAdress){
+            player_index = i
+          }
+      if (cardsRevealed[i]) {
+          if(i ==0 && i == player_index){
+           setOwnCardLeft(getCardFromBit(cardsOnTable[i]))
+           setOwnCardRight(getCardFromBit(cardsOnTable[i]))
+           set(getCardFromBit(cardsOnTable[i]))
+           setOwnCardLeft(getCardFromBit(cardsOnTable[i]))
+          }else if (i == 4){
+            setTableCardOne(getCardFromBit(cardsOnTable[i]))
+          }else if (i == 5){
+            setTableCardTwo(getCardFromBit(cardsOnTable[i]))
+          }else if (i == 6){
+            setTableCardThree(getCardFromBit(cardsOnTable[i]))
+          }else if (i == 7){
+            setTableCardFour(getCardFromBit(cardsOnTable[i]))
+          }else if (i == 8){
+            setTableCardFive(getCardFromBit(cardsOnTable[i]))
+          }
+      }
+    }
+
+  }
+
+  const abi = ["function bet() public",
   const abi = ["function bet(uint256 amount) public",
     "function fold() public",
     "function gameState() external view returns (tuple(uint256 playerCount, uint256 playerStack, uint8 round, address playerAddress, uint256 playerBet, uint256 cardCount, uint8[] memory cardsOnTable, bool[] memory cardsRevealed, address[] memory playerAddresses))"];
@@ -181,14 +220,16 @@ const Table: React.FC = () => {
 
         <img src={mainPlayer} alt="mainPlayer" className="mainPlayer" />
 
-        <img src={cardBackground} alt="middleCard 1" className="tableCardOne" />
-        <img src={cardBackground} alt="middleCard 2" className="tableCardTwo" />
-        <img src={cardBackground} alt="middleCard 3" className="tableCardThree" />
-        <img src={cardBackground} alt="middleCard 4" className="tableCardFour" />
-        <img src={cardBackground} alt="middleCard 5" className="tableCardFive" />
+        <img src={tableCardOne} alt="middleCard 1" className="tableCardOne" />
+        <img src={tableCardTwo} alt="middleCard 2" className="tableCardTwo" />
+        <img src={tableCardThree} alt="middleCard 3" className="tableCardThree" />
+        <img src={tableCardFour} alt="middleCard 4" className="tableCardFour" />
+        <img src={tableCardFive} alt="middleCard 5" className="tableCardFive" />
 
-        <img src={cardBackground} alt="ownCard 1" className="ownCardLeft " />
-        <img src={cardBackground} alt="ownCard 2" className="ownCardRight" />
+        <img src={ownCardLeft} alt="ownCard 1" className="ownCardLeft " />
+        <img src={ownCardRight} alt="ownCard 2" className="ownCardRight" />
+        <img src={playerCardLeft} alt="ownCard 1" className="ownCardLeft" />
+        <img src={playerCardRight} alt="ownCard 2" className="ownCardRight" />
       </div>
     </div>
   )

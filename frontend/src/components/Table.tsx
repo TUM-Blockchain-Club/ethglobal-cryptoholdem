@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, { useState, useEffect } from "react"
 import cardBackground from "../CryptoHoldem_assests/Cards new/Card Background.png"
 
 import blueA from "../CryptoHoldem_assests/Cards new/Blue/Card Blue A.png"
@@ -57,15 +57,10 @@ import red8 from "../CryptoHoldem_assests/Cards new/Red/Card Red 8.svg"
 import red9 from "../CryptoHoldem_assests/Cards new/Red/Card Red 9.svg"
 import red10 from "../CryptoHoldem_assests/Cards new/Red/Card Red 10.svg"
 
-
-
 import { Button, Modal, notification } from "antd";
 import playerOne from "../CryptoHoldem_assests/Player/head-cat.png"
 import playerPlaceholder from "../CryptoHoldem_assests/Player/Placeholder Player/Placeholder Player 3.svg"
 import mainPlayer from "../CryptoHoldem_assests/Player/head-whale-alive.png"
-
-
-
 import roundTable from "../CryptoHoldem_assests/Rest/Pixel Table.png"
 import { Contract, Eip1193Provider, ethers } from 'ethers';
 
@@ -73,12 +68,11 @@ import { BrowserProvider } from "ethers";
 import { use } from "chai";
 
 const Table: React.FC = () => {
-
   const [ownBudget, setOwnBudget] = useState<string>("0.00");
   const [playerBudget, setPlayerBudget] = useState<string>("0.00");
   const [potBudget, setPotBudget] = useState<string>("0.00");
 
-  const [inputField, setInputField] = useState<number|undefined>()
+  const [inputField, setInputField] = useState<number | undefined>()
 
   const [ownCardLeft, setOwnCardLeft] = useState()
   const [ownCardRight, setOwnCardRight] = useState()
@@ -87,7 +81,6 @@ const Table: React.FC = () => {
   const [tableCardThree, setTableCardThree] = useState()
   const [tableCardFour, setTableCardFour] = useState()
   const [tableCardFive, setTableCardFive] = useState()
-
 
   const [api] = notification.useNotification();
 
@@ -103,8 +96,7 @@ const Table: React.FC = () => {
     "function fold() public",
     "function gameState() external view returns (tuple(uint256 playerCount, uint256 playerStack, uint8 round, address playerAddress, uint256 playerBet, uint256 cardCount, uint8[] memory cardsOnTable, bool[] memory cardsRevealed, address[] memory playerAddresses))"];
 
-  var provider =  new BrowserProvider(window.ethereum as Eip1193Provider);
-
+  var provider = new BrowserProvider(window.ethereum as Eip1193Provider);
 
   function getProvider() {
     if (provider === null) {

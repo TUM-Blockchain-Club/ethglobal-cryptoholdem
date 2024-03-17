@@ -41,6 +41,19 @@ contract Poker is Permissioned {
     stillPlaying[msg.sender] = true;
   }
 
+  function startGame() public {
+    require(isPlayer(msg.sender), "You are not in the game");
+    require(players.length > 1, "Not enough players to start the game");
+    require(cards.length == 0, "Game already started");
+    require(
+      playerIndex(msg.sender) == 0,
+      "Only the first player can start the game"
+    );
+
+    deal();
+    currentPlayer = players[0];
+  }
+
   function bet(uint256 amount) public {
     require(isPlayer(msg.sender), "You are not in the game");
     require(stillPlaying[msg.sender], "You are not in the game");
@@ -100,56 +113,9 @@ contract Poker is Permissioned {
     currentPlayer = players[index];
   }
 
-  /*function betRound() public return uint8 {
-    uint8 currentBet = 0;
-
-    for (uint8 i = 0; i < players.length; i++) {
-      // check if player is still in the game
-      if (!stillPlaying[i]) continue ;
-
-      // check if player has already bet
-      // check if player has enough money to bet
-      // check if player wants to bet
-      // update player bet
-      // update currentBet
-    }
-
-
-    uint currentBet
-
-    pot += msg.value;
-  }*/
-
-  /*function mainLoop() public payable { // returns (gamestate?)
-    // main game loop
-    // check if all players have joined
-    require(isPlayer(msg.sender), "You are not in the game");
+  function deal() internal {
     require(players.length > 1, "Not enough players to start the game");
     require(cards.length == 0, "Game already started");
-
-    // track next player to move
-
-    // track current game phase and allowed actions
-
-    // deal cards
-    deal()
-
-
-    // pre-flop bet round                
-    // reveal flop
-    // bet round
-    // reveal turn
-    // bet round
-    // reveal river
-    // bet round
-    // check for winner
-    // showdon 
-    // distribute pot                
-
-  }*/
-
-  function deal() public {
-    require(players.length > 1, "Not enough players to start the game");
 
     // create a new deck of cards
     cards = new euint8[](players.length * 2 + 5);

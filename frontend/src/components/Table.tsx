@@ -88,60 +88,61 @@ const Table: React.FC = () => {
 
   const [api] = notification.useNotification();
 
-  const cards= {
-    "[0,2]":blue2,
-    "[0,3]":blue3,
-    "[0,4]":blue4,
-    "[0,5]":blue5,
-    "[0,6]":blue6,
-    "[0,7]":blue7,
-    "[0,8]":blue8,
-    "[0,9]":blue9,
-    "[0,10]":blue10,
-    "[0,11]":blueJ,
-    "[0,12]":blueQ,
-    "[0,13]":blueK,
-    "[0,14]":blueA,
-    "[1,2]":red2,
-    "[1,3]":red3,
-    "[1,4]":red4,
-    "[1,5]":red5,
-    "[1,6]":red6,
-    "[1,7]":red7,
-    "[1,8]":red8,
-    "[1,9]":red9,
-    "[1,10]":red10,
-    "[1,11]":redJ,
-    "[1,12]":redQ,
-    "[1,13]":redK,
-    "[1,14]":redA,
-    "[2,2]":pink2,
-    "[2,3]":pink3,
-    "[2,4]":pink4,
-    "[2,5]":pink5,
-    "[2,6]":pink6,
-    "[2,7]":pink7,
-    "[2,8]":pink8,
-    "[2,9]":pink9,
-    "[2,10]":pink10,
-    "[2,11]":pinkJ,
-    "[2,12]":pinkQ,
-    "[2,13]":pinkK,
-    "[2,14]":pinkA,
-    "[3,2]":green2,
-    "[3,3]":green3,
-    "[3,4]":green4,
-    "[3,5]":green5,
-    "[3,6]":green6,
-    "[3,7]":green7,
-    "[3,8]":green8,
-    "[3,9]":green9,
-    "[3,10]":green10,
-    "[3,11]":greenJ,
-    "[3,12]":greenQ,
-    "[3,13]":greenK,
-    "[3,14]":greenA,
-
+  function getCardFromBit(card: number) {
+    switch (card) {
+      case 0b000000: return blue2;
+      case 0b000001: return blue3;
+      case 0b000010: return blue4;
+      case 0b000011: return blue5;
+      case 0b000100: return blue6;
+      case 0b000101: return blue7;
+      case 0b000110: return blue8;
+      case 0b000111: return blue9;
+      case 0b001000: return blue10;
+      case 0b001001: return blueJ;
+      case 0b001010: return blueQ;
+      case 0b001011: return blueK;
+      case 0b001100: return blueA;
+      case 0b010000: return red2;
+      case 0b010001: return red3;
+      case 0b010010: return red4;
+      case 0b010011: return red5;
+      case 0b010100: return red6;
+      case 0b010101: return red7;
+      case 0b010110: return red8;
+      case 0b010111: return red9;
+      case 0b011000: return red10;
+      case 0b011001: return redJ;
+      case 0b011010: return redQ;
+      case 0b011011: return redK;
+      case 0b011100: return redA;
+      case 0b100000: return pink2;
+      case 0b100001: return pink3;
+      case 0b100010: return pink4;
+      case 0b100011: return pink5;
+      case 0b100100: return pink6;
+      case 0b100101: return pink7;
+      case 0b100110: return pink8;
+      case 0b100111: return pink9;
+      case 0b101000: return pink10;
+      case 0b101001: return pinkJ;
+      case 0b101010: return pinkQ;
+      case 0b101011: return pinkK;
+      case 0b101100: return pinkA;
+      case 0b110000: return green2;
+      case 0b110001: return green3;
+      case 0b110010: return green4;
+      case 0b110011: return green5;
+      case 0b110100: return green6;
+      case 0b110101: return green7;
+      case 0b110110: return green8;
+      case 0b110111: return green9;
+      case 0b111000: return green10;
+      case 0b111001: return greenJ;
+      case 0b111010: return greenQ;
+      case 0b111011: return greenK;
+      case 0b111100: return greenA;
+    }
   }
 
   useEffect(() => {
@@ -152,50 +153,45 @@ const Table: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  function getCardFromBit(card: number) {
-    let x = "[" + (card >> 4).toString() + "," + (card & 0xf + 2).toString() + "]";
-    return cards[x];
-  }
-
-  function getCard(cardsOnTable: Uint8Array, cardsRevealed: boolean[], playerAdress: string, player_Addresses: string[]){
-    for (let i = 0; i < cardsRevealed.length; i++){
+  function getCard(cardsOnTable: Uint8Array, cardsRevealed: boolean[], playerAdress: string, player_Addresses: string[]) {
+    for (let i = 0; i < cardsRevealed.length; i++) {
       let player_index = 0
-      for (i = 0; i< player_Addresses.length; i++)
-          if (player_Addresses[i] == playerAdress){
-            player_index = i
-          }
+      for (i = 0; i < player_Addresses.length; i++)
+        if (player_Addresses[i] == playerAdress) {
+          player_index = i
+        }
       if (cardsRevealed[i]) {
-          if(i ==0 && i == player_index) {
-            setOwnCardLeft(getCardFromBit(cardsOnTable[0]))
-            setOwnCardRight(getCardFromBit(cardsOnTable[1]))
-            setPlayerCardLeft(getCardFromBit(cardsOnTable[2]))
-            setPlayerCardRight(getCardFromBit(cardsOnTable[3]))
-          }else if (i == 1 && i == player_index){
-            setOwnCardLeft(getCardFromBit(cardsOnTable[1]))
-            setOwnCardRight(getCardFromBit(cardsOnTable[2]))
-            setPlayerCardLeft(getCardFromBit(cardsOnTable[3]))
-            setPlayerCardRight(getCardFromBit(cardsOnTable[0]))
-          }else if (i == 2 && i == player_index){
-            setOwnCardLeft(getCardFromBit(cardsOnTable[2]))
-            setOwnCardRight(getCardFromBit(cardsOnTable[3]))
-            setPlayerCardLeft(getCardFromBit(cardsOnTable[0]))
-            setPlayerCardRight(getCardFromBit(cardsOnTable[1]))
-          }else if (i == 3 && i == player_index){
-            setOwnCardLeft(getCardFromBit(cardsOnTable[3]))
-            setOwnCardRight(getCardFromBit(cardsOnTable[0]))
-            setPlayerCardLeft(getCardFromBit(cardsOnTable[1]))
-            setPlayerCardRight(getCardFromBit(cardsOnTable[2]))
-          }else if (i == 4){
-            setTableCardOne(getCardFromBit(cardsOnTable[i]))
-          }else if (i == 5){
-            setTableCardTwo(getCardFromBit(cardsOnTable[i]))
-          }else if (i == 6){
-            setTableCardThree(getCardFromBit(cardsOnTable[i]))
-          }else if (i == 7){
-            setTableCardFour(getCardFromBit(cardsOnTable[i]))
-          }else if (i == 8){
-            setTableCardFive(getCardFromBit(cardsOnTable[i]))
-          }
+        if (i == 0 && i == player_index) {
+          setOwnCardLeft(getCardFromBit(cardsOnTable[0])!)
+          setOwnCardRight(getCardFromBit(cardsOnTable[1])!)
+          setPlayerCardLeft(getCardFromBit(cardsOnTable[2])!)
+          setPlayerCardRight(getCardFromBit(cardsOnTable[3])!)
+        } else if (i == 1 && i == player_index) {
+          setOwnCardLeft(getCardFromBit(cardsOnTable[1])!)
+          setOwnCardRight(getCardFromBit(cardsOnTable[2])!)
+          setPlayerCardLeft(getCardFromBit(cardsOnTable[3])!)
+          setPlayerCardRight(getCardFromBit(cardsOnTable[0])!)
+        } else if (i == 2 && i == player_index) {
+          setOwnCardLeft(getCardFromBit(cardsOnTable[2])!)
+          setOwnCardRight(getCardFromBit(cardsOnTable[3])!)
+          setPlayerCardLeft(getCardFromBit(cardsOnTable[0])!)
+          setPlayerCardRight(getCardFromBit(cardsOnTable[1])!)
+        } else if (i == 3 && i == player_index) {
+          setOwnCardLeft(getCardFromBit(cardsOnTable[3])!)
+          setOwnCardRight(getCardFromBit(cardsOnTable[0])!)
+          setPlayerCardLeft(getCardFromBit(cardsOnTable[1])!)
+          setPlayerCardRight(getCardFromBit(cardsOnTable[2])!)
+        } else if (i == 4) {
+          setTableCardOne(getCardFromBit(cardsOnTable[i])!)
+        } else if (i == 5) {
+          setTableCardTwo(getCardFromBit(cardsOnTable[i])!)
+        } else if (i == 6) {
+          setTableCardThree(getCardFromBit(cardsOnTable[i])!)
+        } else if (i == 7) {
+          setTableCardFour(getCardFromBit(cardsOnTable[i])!)
+        } else if (i == 8) {
+          setTableCardFive(getCardFromBit(cardsOnTable[i])!)
+        }
       }
     }
 

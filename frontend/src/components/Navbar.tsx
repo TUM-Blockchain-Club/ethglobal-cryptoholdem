@@ -111,11 +111,11 @@ const Navbar: React.FC = () => {
   return (
     <nav>
       <div className="flex items-center h-[6vH] bg-table_black">
-        <Button type={"primary"} className="text-table_black bg-cgrey">
-          {account}
+        <Button type={"primary"} className="text-table_black bg-cgreen" onClick={startGame}>
+          Start Game
         </Button>
-        <Button type={"primary"} className="text-table_black bg-cgrey" onClick={joinGame}>
-          {account}
+        <Button type={"primary"} className="text-table_black bg-cgreen" onClick={joinGame}>
+          Join Game
         </Button>
 
       </div>

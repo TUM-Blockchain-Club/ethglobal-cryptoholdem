@@ -63,7 +63,7 @@ contract Poker is Permissioned {
         } else if (currentRound == 2) {
             revealOnTable(4, 5);
         } else if (currentRound == 3) {
-            address[] tmp = determineWinner();
+            address[] memory tmp = determineWinner();
             distributePot(tmp);
         }
         currentRound++;
@@ -89,7 +89,7 @@ contract Poker is Permissioned {
         } else if (currentRound == 2) {
             revealOnTable(4, 5);
         } else if (currentRound == 3) {
-            address[] tmp = determineWinner();
+            address[] memory tmp = determineWinner();
             distributePot(tmp);
         }
         currentRound++;
@@ -275,8 +275,6 @@ contract Poker is Permissioned {
     }
     pot = 0;
     
-    // if multiple winners, split the pot
-    // if no winners, split the pot
   }
 
   // determine hand for a single player

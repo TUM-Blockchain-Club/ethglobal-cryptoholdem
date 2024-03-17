@@ -27,6 +27,15 @@ const func: DeployFunction = async function () {
   });
 
   console.log(`Counter contract: `, counter.address);
+
+  const poker = await deploy("Poker", {
+    from: signer.address,
+    args: [],
+    log: true,
+    skipIfAlreadyDeployed: false,
+  });
+
+  console.log(`Poker contract: `, poker.address);
 };
 
 export default func;
